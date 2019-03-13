@@ -83,7 +83,7 @@ def main(argv):
 
     row = [source, datetime.today().strftime('%Y/%m/%d')]
     df.loc[len(df)] = row
-    df.to_csv('C:/Users/al_be/OneDrive/Documentos/Fotos/UltimaCopia.tsv', sep='\t', index=False)
+    df.to_csv(stConFile, sep='\t', index=False)
 
 
 if __name__ == "__main__":
