@@ -5,14 +5,20 @@ from datetime import datetime
 import pandas as pd
 import collections
 from shutil import copyfile
+from PIL import Image
+
+
+def get_date_taken(path):
+    return Image.open(path)._getexif()[36867]
 
 
 def main(argv):
     source = ''
     stNewPath = ''
     stOriginalPath = ''
+    stConFile = ''
     try:
-        opts, args = getopt.getopt(argv, "hs:i:o:", ["source=", "ifile=", "ofile="])
+        opts, args = getopt.getopt(argv, "hs:i:o:c:", ["source=", "ifile=", "ofile=", "cfile="])
     except getopt.GetoptError:
         print('test.py -s <fuente> -i <inputfile> -o <outputfile>')
         sys.exit(2)
@@ -27,7 +33,10 @@ def main(argv):
             stOriginalPath = arg
         elif opt in ("-o", "--ofile"):
             stNewPath = arg
-    df = pd.read_csv('C:/Users/al_be/OneDrive/Documentos/Fotos/UltimaCopia.tsv', sep='\t')
+        elif opt in ("-c", "--cfile"):
+            stConFile = arg
+
+    df = pd.read_csv(stConFile, sep='\t')
     # list(df)
 
     # Filtro = 'Telefono == \'' + source + '\''
@@ -52,8 +61,11 @@ def main(argv):
                 print(f.name)
                 print(f.path)
                 print(datetime.fromtimestamp(f.stat().st_mtime))
-                t = os.path.getmtime(f)
-                mod_time = datetime.fromtimestamp(t)
+                t = get_date_taken(f.path)
+
+                # t = os.path.getctime(f)
+                mod_time = datetime.strptime(t, '%Y:%m:%d %H:%M:%S')
+                # mod_time = datetime.fromtimestamp(t)
                 mod_date = mod_time.date().strftime('%Y%m%d')
                 by_date[mod_date].append(f)
                 # copyfile(f.path, stNewPath + "/" + f.name)

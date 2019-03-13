@@ -14,6 +14,8 @@ setup(name='copyfotos',
           'datetime',
           'pandas',
           'collections',
-          'shutil'
+          'shutil',
+          'pilllow',
+          'numpy'
       ],
       zip_safe=False)
