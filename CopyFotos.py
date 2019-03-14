@@ -6,6 +6,11 @@ import pandas as pd
 import collections
 from shutil import copyfile
 from PIL import Image
+from pathlib import Path
+
+
+def get_files(base_dir, extension):
+    return Path(base_dir).glob("*/*." + extension)
 
 
 def get_date_taken(path):
@@ -58,6 +63,7 @@ def main(argv):
     for f in files:
         if f.name.endswith(".jpg"):
             if f.stat().st_mtime > timelastreaded.timestamp():
+                s = f.stat().st_size
                 print(f.name)
                 print(f.path)
                 print(datetime.fromtimestamp(f.stat().st_mtime))
@@ -66,7 +72,7 @@ def main(argv):
                 # t = os.path.getctime(f)
                 mod_time = datetime.strptime(t, '%Y:%m:%d %H:%M:%S')
                 # mod_time = datetime.fromtimestamp(t)
-                mod_date = mod_time.date().strftime('%Y%m%d')
+                mod_date = mod_time.date().strftime('%Y-%m-%d')
                 by_date[mod_date].append(f)
                 # copyfile(f.path, stNewPath + "/" + f.name)
 
